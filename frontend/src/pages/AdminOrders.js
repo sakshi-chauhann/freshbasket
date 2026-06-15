@@ -21,7 +21,7 @@ const AdminOrders = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [filter]);
+  }, [fetchOrders]);
 
   const fetchOrders = async () => {
     try {

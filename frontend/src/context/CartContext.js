@@ -32,7 +32,7 @@ export const CartProvider = ({ children }) => {
       }
       setLoading(false);
     }
-  }, [isLoggedIn]);
+  }, [loadCartFromDB]);
 
   const loadCartFromDB = async () => {
     try {

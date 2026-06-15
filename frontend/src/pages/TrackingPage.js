@@ -11,7 +11,7 @@ const TrackingPage = () => {
 
   useEffect(() => {
     fetchTracking();
-  }, [orderId]);
+  }, [fetchTracking]);
 
   const fetchTracking = async () => {
     try {
