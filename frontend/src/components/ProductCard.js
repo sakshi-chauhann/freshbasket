@@ -70,13 +70,13 @@ const ProductCard = ({ product }) => {
   };
 
   if (!product) {
-    return <div className="animate-pulse bg-gray-200 rounded-xl h-80"></div>;
+    return <div className="animate-pulse bg-gray-200 rounded-xl h-48 sm:h-56 md:h-80"></div>;
   }
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-      {/* Product Image */}
-      <div className="relative h-48 overflow-hidden bg-gray-100">
+      {/* Product Image - Responsive height */}
+      <div className="relative h-32 sm:h-40 md:h-48 lg:h-56 overflow-hidden bg-gray-100">
         <img
           src={product.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=300'}
           alt={product.name}
@@ -89,7 +89,7 @@ const ProductCard = ({ product }) => {
         {/* Out of Stock Overlay */}
         {!product.inStock && (
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <span className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold rotate-12">
+            <span className="bg-red-500 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold rotate-12">
               OUT OF STOCK
             </span>
           </div>
@@ -99,32 +99,32 @@ const ProductCard = ({ product }) => {
         <button
           onClick={handleWishlist}
           disabled={wishlistLoading}
-          className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:scale-110 transition disabled:opacity-50"
+          className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-white rounded-full p-1.5 sm:p-2 shadow-md hover:scale-110 transition disabled:opacity-50"
         >
           <Heart 
-            className={`w-5 h-5 ${isInWishlist ? 'fill-red-500 text-red-500' : 'text-gray-500'}`}
+            className={`w-4 h-4 sm:w-5 sm:h-5 ${isInWishlist ? 'fill-red-500 text-red-500' : 'text-gray-500'}`}
           />
         </button>
       </div>
 
-      <div className="p-4">
-        <h3 className="font-semibold text-lg text-blinkit-dark">{product.name}</h3>
-        <p className="text-gray-500 text-sm mt-1">{product.description || 'Fresh grocery item'}</p>
+      <div className="p-2 sm:p-3 md:p-4">
+        <h3 className="font-semibold text-sm sm:text-base md:text-lg text-blinkit-dark truncate">{product.name}</h3>
+        <p className="text-gray-500 text-xs sm:text-sm mt-0.5 sm:mt-1 line-clamp-1">{product.description || 'Fresh grocery item'}</p>
 
-        <div className="mt-3 flex items-center justify-between">
+        <div className="mt-2 sm:mt-3 flex items-center justify-between">
           <div>
-            <span className="text-xl font-bold text-blinkit-dark">₹{product.price}</span>
+            <span className="text-base sm:text-lg md:text-xl font-bold text-blinkit-dark">₹{product.price}</span>
             {product.weight && (
-              <span className="text-sm text-gray-500 ml-1">/{product.weight}</span>
+              <span className="text-xs text-gray-500 ml-1">/{product.weight}</span>
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <select
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
               disabled={!product.inStock}
-              className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none disabled:opacity-50"
+              className="border border-gray-300 rounded-lg px-1 sm:px-2 py-0.5 sm:py-1 text-xs sm:text-sm focus:outline-none disabled:opacity-50"
             >
               {[1, 2, 3, 4, 5].map(num => (
                 <option key={num} value={num}>{num}</option>
@@ -134,7 +134,7 @@ const ProductCard = ({ product }) => {
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
-              className={`px-4 py-1.5 rounded-lg font-semibold transition ${
+              className={`px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-1.5 rounded-lg font-semibold transition text-xs sm:text-sm ${
                 product.inStock 
                   ? 'bg-blinkit-yellow text-blinkit-dark hover:bg-yellow-400' 
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'

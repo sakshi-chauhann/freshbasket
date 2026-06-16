@@ -17,6 +17,17 @@ const Navbar = () => {
     if (userData) {
       setUser(JSON.parse(userData));
     }
+
+     const handleStorageChange = () => {
+    const updatedUser = localStorage.getItem('freshbasket_user');
+    if (updatedUser) {
+      setUser(JSON.parse(updatedUser));
+    }
+  };
+  
+  window.addEventListener('storage', handleStorageChange);
+  return () => window.removeEventListener('storage', handleStorageChange);
+  
   }, []);
 
   const handleSearch = (e) => {
@@ -39,7 +50,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2" onClick={() => setIsMenuOpen(false)}>
             <div className="w-10 h-10 bg-blinkit-yellow rounded-full flex items-center justify-center">
               <span className="text-blinkit-dark font-bold text-xl">FB</span>
             </div>
@@ -64,17 +75,13 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {/* Admin Link - Desktop */}
             {user?.role === 'admin' && (
-                <>
-              <Link to="/admin/products" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>
-              📦 Products
+              <Link to="/admin/products" className="hidden md:flex items-center gap-1 text-gray-700 hover:text-blinkit-yellow transition">
+                <span className="text-xl">📦</span>
+                <span className="text-sm font-medium">Admin</span>
               </Link>
-              <Link to="/admin/orders" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>
-              📋 Manage Orders
-                </Link>
-              </>
-              )}
+            )}
 
-            {/* Recipe Link */}
+            {/* Recipe Link - Desktop */}
             <Link to="/recipe" className="hidden md:flex items-center gap-1 text-gray-700 hover:text-blinkit-yellow transition">
               <span className="text-xl">🍳</span>
               <span className="text-sm font-medium">What to Cook?</span>
@@ -90,8 +97,8 @@ const Navbar = () => {
             </Link>
 
             <Link to="/wishlist" className="relative">
-  <span className="text-2xl">❤️</span>
-</Link>
+              <span className="text-2xl">❤️</span>
+            </Link>
 
             {isLoggedIn ? (
               <div className="relative flex items-center gap-2">
@@ -101,17 +108,25 @@ const Navbar = () => {
                 </button>
                 
                 {isMenuOpen && (
-                  <div className="absolute right-0 mt-2 top-full w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+                  <div className="absolute right-0 mt-2 top-full w-56 bg-white rounded-lg shadow-lg py-2 z-50">
                     <Link to="/my-orders" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>
                       My Orders
                     </Link>
-                    <Link to="/recipe" className="block px-4 py-2 hover:bg-gray-100 md:hidden" onClick={() => setIsMenuOpen(false)}>
+                    <Link to="/wishlist" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>
+                      ❤️ Wishlist
+                    </Link>
+                    <Link to="/recipe" className="block px-4 py-2 hover:bg-gray-100 border-t" onClick={() => setIsMenuOpen(false)}>
                       🍳 What to Cook?
                     </Link>
                     {user?.role === 'admin' && (
-                      <Link to="/admin/products" className="block px-4 py-2 hover:bg-gray-100 border-t" onClick={() => setIsMenuOpen(false)}>
-                        📦 Admin Panel
-                      </Link>
+                      <>
+                        <Link to="/admin/products" className="block px-4 py-2 hover:bg-gray-100 border-t" onClick={() => setIsMenuOpen(false)}>
+                          📦 Products
+                        </Link>
+                        <Link to="/admin/orders" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>
+                          📋 Manage Orders
+                        </Link>
+                      </>
                     )}
                     <button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 border-t">
                       Logout
@@ -120,35 +135,33 @@ const Navbar = () => {
                 )}
               </div>
             ) : (
-              <Link to="/login" className="bg-blinkit-yellow text-blinkit-dark px-4 py-2 rounded-full font-semibold">
+              <Link to="/login" className="bg-blinkit-yellow text-blinkit-dark px-4 py-2 rounded-full font-semibold whitespace-nowrap">
                 Login
               </Link>
             )}
 
             {/* Mobile Menu Button */}
-            <button className="md:hidden text-2xl" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <button className="md:hidden text-2xl p-1" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? '✕' : '☰'}
             </button>
           </div>
         </div>
 
-        {/* Mobile Search */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-4">
-            <form onSubmit={handleSearch}>
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  placeholder="Search for groceries..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-2 pl-10 rounded-full border border-gray-300 focus:outline-none focus:border-blinkit-yellow"
-                />
-                <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
-              </div>
-            </form>
-          </div>
-        )}
+        {/* Mobile Search - Always visible on mobile */}
+        <div className="md:hidden mt-3">
+          <form onSubmit={handleSearch}>
+            <div className="relative w-full">
+              <input
+                type="text"
+                placeholder="Search for groceries..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 pl-10 rounded-full border border-gray-300 focus:outline-none focus:border-blinkit-yellow text-sm"
+              />
+              <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
+            </div>
+          </form>
+        </div>
       </div>
     </nav>
   );
